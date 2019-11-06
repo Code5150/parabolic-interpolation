@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Интерполяция параболическими сплайнами</title>
+</head>
+<body>
+    <form method="POST" id='spline-input' action="/result">
+    <div id='spline-input-div' class="spline-input">
+        <select id='number-of-points' name="length" onchange="changeNumberOfPoints()" form="spline-input">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+        <br>
+        <select id='border-conditions' name="condition" form="spline-input">
+            <option value="firstDer">S'(X0) = (Y1- Y0)/(X1 - X0)</option>
+            <option value="lastDer">S'(Xn) = (Yn - Yn-1)/(Xn - Xn-1)</option>
+        </select>
+        <br>
+        <div id='place-for-table'>
+            <script>
+                let div = document.getElementById('place-for-table');
+                createTable(div, Number(document.getElementById('number-of-points').value));
+                function createTable(parent, rows) {
+                    let table = document.createElement('table');
+                    table.id = 'input-table';
+                    for (let i = 0; i < rows + 1; i++) {
+                        let tr = document.createElement('tr');
+                        if (i === 0) {
+                            let th = document.createElement('th');
+                            th.innerText = 'X';
+                            tr.appendChild(th);
+                            th = document.createElement('th');
+                            th.innerText = 'Y';
+                            tr.appendChild(th);
+                        }
+                        else {
+                            let td = document.createElement('td');
+                            let input = document.createElement('input');
+                            input.type = 'number';
+                            input.name = `x${i}`;
+                            input.form = 'spline-input';
+                            input.required = true;
+                            td.appendChild(input);
+                            tr.appendChild(td);
+                            td = document.createElement('td');
+                            input = document.createElement('input');
+                            input.type = 'number';
+                            input.name = `y${i}`;
+                            input.form = 'spline-input';
+                            input.required = true;
+                            td.appendChild(input);
+                            tr.appendChild(td);
+                        }
+                        table.appendChild(tr);
+                    }
+                    parent.appendChild(table);
+                }
+            </script>
+        </div>
+        <br>
+        <button type="submit">Submit</button>
+    </div>
+    <script>
+        function changeNumberOfPoints(){
+            let value = Number(document.getElementById('number-of-points').value);
+            let table = document.getElementById('input-table');
+            table.remove();
+            let div = document.getElementById('place-for-table');
+            createTable(div, value);
+            //console.log(value + ' ' + typeof value);
+        }
+    </script>
+</body>
+</html>
